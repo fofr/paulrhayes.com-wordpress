@@ -525,6 +525,7 @@ text-decoration: none;
     .listing {
     width: 100%;
     -webkit-box-sizing: border-box; /* for old ios */
+	-moz-box-sizing: border-box;
     box-sizing: border-box;
     padding-left: 20px;
     padding-right: 20px;
@@ -552,6 +553,7 @@ text-decoration: none;
     
     .listing article {
     -webkit-box-sizing: border-box; /* for old ios */
+	-moz-box-sizing: border-box;
     box-sizing: border-box;
     width: 33%;
     margin-left: 0;

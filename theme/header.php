@@ -11,7 +11,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<script>(function(d){d.className=d.className.replace(/^noJs\b/,'js');}(document.documentElement));</script>
 	<!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-	<link rel="stylesheet" href="/css/master.css?6" />
+	<link rel="stylesheet" href="/css/master.css?7" />
 	<?php wp_head(); ?>
 	<link rel="profile" href="http://gmpg.org/xfn/11" />
 	<link rel="alternate" type="application/rss+xml" href="http://feeds.feedburner.com/prhayes" title="Paul Hayes RSS" />
