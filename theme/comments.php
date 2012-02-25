@@ -23,7 +23,7 @@ foreach ( $comments as $comment )
 	get_comment_type() == "comment" ? ++$comment_count : ++$ping_count;
 ?>
 
-				<div id="comments-list" class="comments">
+				<div id="comments-list" class="comments" role="complementary">
 					<h3><?php printf($comment_count != 1 ? __('<span>%d</span> Comments') : __('<span>One</span> Comment'), $comment_count); ?>
 						<?php if ( 'open' == $post->comment_status ) { ?>
 							<a href="#respond" class="respond sans">Post your own</a>

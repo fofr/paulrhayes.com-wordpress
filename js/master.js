@@ -145,11 +145,94 @@ jQuery.cachedScript = function(url, options) {
 };
 
 (function(){
-	if ($('pre').addClass('prettyprint').length > 0) {
-		$.cachedScript('/js/prettify.js', {success: function() {
+	
+	/* pjax inline loading */
+	$pjaxWrapper = $('.pjax-wrapper');
+	$previousAndNext = $('.single a[rel=prev], .single a[rel=next]');
+	doPjaxTransition = 'onwebkittransitionend' in window; /* only webkit for now */
+	
+	$previousAndNext.pjax('.pjax-wrapper', {
+		timeout: 5000,
+		error: function() {
+			$pjaxWrapper.trigger('pjax:error');
+		}
+	});
+	
+	$pjaxWrapper.on('click', '.single a[rel=prev], .single a[rel=next]', function(evt) {
+		var $el = $(this),
+			transitionDfd = $.Deferred(),
+			pjaxDfd = $.Deferred();
+
+		// finish transitioning, only webkit for now
+		// Firefox didn't transition 'left'
+		// Opera transitioned, but didn't bring next/previous article in from opposite side
+		
+		if (doPjaxTransition) {
+			
+			if($el.is('[rel=prev]')) {
+				$pjaxWrapper.addClass('goto-previous');
+			} else {
+				$pjaxWrapper.addClass('goto-next');			
+			}
+			
+			$pjaxWrapper.bind('webkitTransitionEnd', function() {
+				transitionDfd.resolve();
+			});
+		} else {
+			$pjaxWrapper.css('visibility','hidden');
+			transitionDfd.resolve();
+		}
+	
+		// finish loading content
+		$pjaxWrapper.bind('pjax:end', function() {
+			pjaxDfd.resolve();
+		});
+		
+		// error loading
+		$pjaxWrapper.bind('pjax:error', function() {
+			pjaxDfd.reject();
+		});
+	
+		$.when(pjaxDfd, transitionDfd).then(bringNew, bringBack);
+	
+		function bringNew() {
+			if (doPjaxTransition) {
+				$pjaxWrapper.addClass('switch');
+		
+				if($el.is('[rel=prev]')) {
+					$pjaxWrapper.css('left', '-100%');
+				} else {
+					$pjaxWrapper.css('left', '100%');			
+				}
+		
+				setTimeout(function() {
+					$pjaxWrapper.removeClass('switch goto-previous goto-next');
+					$pjaxWrapper.css('left', '');
+				}, 50);
+			} else {
+				$pjaxWrapper.css('visibility','visible');
+			}
+		}
+		
+		// pjax error, load new URL as normal
+		function bringBack() {
+			window.location = $el.attr('href');
+			//$pjaxWrapper.removeClass('switch goto-previous goto-next');
+		}
+	});
+	
+	/* Code highlighting */
+	$('pre').addClass('prettyprint');
+	$.cachedScript('/js/prettify.js', 
+		{success: function() {
 			prettyPrint();
-		}});
-	}
+			
+			$pjaxWrapper.bind('pjax:end', function() {
+				$('pre').addClass('prettyprint');
+				prettyPrint();
+			});
+		}
+	});
 	
 	/* Check for nth-of-type */
 	var articleBreak = 4;
@@ -166,37 +249,34 @@ jQuery.cachedScript = function(url, options) {
 	}
 	
 	/* Comment box modal */
-	if($('#respond').isPresent()) {
-	
-		(function($respond, $body) {
-			$('a.respond').click(function(evt) {
+	(function($body) {
+		$body.on('click', 'a.respond', function(evt) {
+			var $respond = $('#respond');
+			evt.preventDefault();
+			
+			if(!app.supportPlaceholder) {
+				$respond.addClass('no-placeholder');
+			}
+			
+			$respond.addClass('intermediate');
+			setTimeout(function() {
+				$respond.addClass('active');
+			}, 50);
+			
+			$respond.find('input.text').first().focus();
+			$respond.find('a.close').click(function(evt) {
 				evt.preventDefault();
-				
-				if(!app.supportPlaceholder) {
-					$respond.addClass('no-placeholder');
+				close();
+			});
+			
+			$respond.find('form').submit(function(evt) {
+				close();
+			});
+			
+			$body.keyup(function(evt) {
+				if(evt.keyCode === app.keys.ESC) {
+					close();
 				}
-				
-				$respond.addClass('intermediate');
-				setTimeout(function() {
-					$respond.addClass('active');
-				}, 50);
-				
-				$respond.find('input.text').first().focus();
-				$respond.find('a.close').click(function(evt) {
-					evt.preventDefault();
-					close();
-				});
-				
-				$respond.find('form').submit(function(evt) {
-					close();
-				});
-				
-				$body.keyup(function(evt) {
-					if(evt.keyCode === app.keys.ESC) {
-						close();
-					}
-				});
-				
 			});
 			
 			function close() {
@@ -209,6 +289,7 @@ jQuery.cachedScript = function(url, options) {
 				$respond.find('a.close').unbind('click');
 			}
 			
-		}($('#respond'), $('body')));
-	}	
+		});
+		
+	}($('body')));
 })();

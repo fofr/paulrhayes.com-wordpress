@@ -707,11 +707,72 @@ overflow: visible;
     }
 }
 
-
-
-
 /* Single post: body.single */
 /*************************************************/
+
+/* 
+When switching articles, article moves off to left or right.
+When loading has finished, the article is switched without a
+transition to the opposite side, and moves back into view.
+ */
+
+.pjax-wrapper {
+position: relative;
+-webkit-transition: left 400ms linear;
+/*-moz-transition: left 400ms linear;
+-o-transition: left 400ms linear;
+-ms-transition: left 400ms linear;
+transition: left 400ms linear;*/
+}
+
+/* No transitions when making the switch */
+.pjax-wrapper.switch {
+-webkit-transition: none;
+/*-moz-transition: none;
+-o-transition: none;
+-ms-transition: none;
+transition: none;*/
+}
+
+@media all and (max-width: 779px) {
+	.pjax-wrapper {
+		-webkit-transition-duration: 300ms;
+		/*-moz-transition-duration: 300ms;
+		-o-transition-duration: 300ms;
+		-ms-transition-duration: 300ms;
+		transition-duration: 300ms;*/
+	}
+}
+
+@media all and (max-width: 650px) {
+	.pjax-wrapper {
+		-webkit-transition-duration: 250ms;
+		/*-moz-transition-duration: 250ms;
+		-o-transition-duration: 250ms;
+		-ms-transition-duration: 250ms;
+		transition-duration: 250ms;*/
+	}
+}
+
+@media all and (max-width: 499px) {
+	.pjax-wrapper {
+		-webkit-transition-duration: 200ms;
+		/*-moz-transition-duration: 200ms;
+		-o-transition-duration: 200ms;
+		-ms-transition-duration: 200ms;
+		transition-duration: 200ms;*/
+	}
+}
+
+/* Going to next post, send current article left */
+.pjax-wrapper.goto-next {
+left: -100%;
+}
+
+/* Going to previous post, send current article right */
+.pjax-wrapper.goto-previous {
+left: 100%;
+}
 
 .single article {
 width: 780px;
@@ -880,9 +941,13 @@ height: 408px;
     }
     
     .single article pre {
-    margin-left: -10px;
-    margin-right: -10px;
+    margin-left: -20px;
+    margin-right: -20px;
     }
+
+	.single article pre.thin {
+	width: 100%;
+	}
     
     .single .meta  {
     position: static;
