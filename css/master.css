@@ -444,6 +444,8 @@ border-color: rgba(0,0,0,0.3);
 opacity: 0.8;
 -webkit-transition: opacity 100ms linear;
 -moz-transition: opacity 100ms linear;
+-o-transition: opacity 100ms linear;
+-ms-transition: opacity 100ms linear;
 transition: opacity 100ms linear;
 margin-top: 3px;
 margin-bottom: 10px;
@@ -845,15 +847,13 @@ padding: 10px 0 15px;
 
 article h2,
 article h3 {
-color: #333;
-margin: 24px 0 12px;
+margin: 48px 0 12px;
 font-size: 26px;
 line-height: 36px;
 }
 
 article blockquote {
 margin: 1em 60px;
-font-size: 20px;
 }
 
 article .standunder,
