@@ -11,10 +11,10 @@
 		} else {
 			get_template_part('listing');
 		} ?>
-		<footer>
+		<?php /* <footer>
 			<nav>
-				<?php previous_posts_link(__( '&larr; Prev' )) ?> <?php next_posts_link(__( 'Next &rarr;' )) ?>
+				<?php previous_posts_link(__( '&larr; Prev')) ?> <?php next_posts_link(__( 'Next &rarr;')); ?>
 			</nav>
-		</footer>
+		</footer> */ ?>
 	</section>
 <?php get_footer(); ?>
