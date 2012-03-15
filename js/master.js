@@ -121,7 +121,25 @@ var app = {
 	supportPlaceholder: function() {
 	  var i = document.createElement('input');
 	  return 'placeholder' in i;
-	}()
+	}(),
+	
+	// Analytics tracking helpers
+	trackPageview: function(url) {		
+		if(!!(_gaq && _gaq.push)) {
+			var url = url || window.location.pathname;
+			_gaq.push(['_trackPageview', url]);
+		}
+		
+		return this;
+	},
+	trackEvent: function(action, label) {
+		if(!!(_gaq && _gaq.push)) {
+			var category = window.location.pathname;
+			_gaq.push(['_trackEvent', category, action, label]);
+		}
+		
+		return this;
+	}
 };
 
 // just to make things a little more readable
@@ -146,91 +164,112 @@ jQuery.cachedScript = function(url, options) {
 
 (function(){
 	
+	$(window).bind('popstate', function(evt) {
+		var originalEvent = evt.originalEvent;
+		if(originalEvent && originalEvent.state && originalEvent.state.pjax) {
+			app.trackPageview().trackEvent('pjax', 'pop');
+			
+			$('pre').addClass('prettyprint');
+			prettyPrint();
+		}
+	});
+	
 	/* pjax inline loading */
-	$pjaxWrapper = $('.pjax-wrapper');
-	$previousAndNext = $('.single a[rel=prev], .single a[rel=next]');
-	doPjaxTransition = 'onwebkittransitionend' in window; /* only webkit for now */
+	var $pjaxWrapper = $('.pjax-wrapper');
+	if($pjaxWrapper.isPresent()) {
+		
+		var $previousAndNext = $('.single a[rel=prev], .single a[rel=next]'),
+			doPjaxTransition = 'onwebkittransitionend' in window; /* only webkit for now */
 	
-	$previousAndNext.pjax('.pjax-wrapper', {
-		timeout: 5000,
-		error: function() {
-			$pjaxWrapper.trigger('pjax:error');
-		}
-	});
+		$previousAndNext.pjax('.pjax-wrapper', {
+			timeout: 5000,
+			error: function() {
+				$pjaxWrapper.trigger('pjax:error');
+			}
+		});
 	
-	$pjaxWrapper.on('click', '.single a[rel=prev], .single a[rel=next]', function(evt) {
-		var $el = $(this),
-			transitionDfd = $.Deferred(),
-			pjaxDfd = $.Deferred();
+		$pjaxWrapper.on('click', '.single a[rel=prev], .single a[rel=next]', function(evt) {
+			var $el = $(this),
+				transitionDfd = $.Deferred(),
+				pjaxDfd = $.Deferred();
 
-		// finish transitioning, only webkit for now
-		// Firefox didn't transition 'left'
-		// Opera transitioned, but didn't bring next/previous article in from opposite side
+			// finish transitioning, only webkit for now
+			// Firefox didn't transition 'left'
+			// Opera transitioned, but didn't bring next/previous article in from opposite side
 		
-		if (doPjaxTransition) {
-			
-			if($el.is('[rel=prev]')) {
-				$pjaxWrapper.addClass('goto-previous');
-			} else {
-				$pjaxWrapper.addClass('goto-next');			
-			}
-			
-			$pjaxWrapper.bind('webkitTransitionEnd', function() {
-				transitionDfd.resolve();
-			});
-		} else {
-			$pjaxWrapper.css('visibility','hidden');
-			transitionDfd.resolve();
-		}
-	
-		// finish loading content
-		$pjaxWrapper.bind('pjax:end', function() {
-			pjaxDfd.resolve();
-		});
-		
-		// error loading
-		$pjaxWrapper.bind('pjax:error', function() {
-			pjaxDfd.reject();
-		});
-	
-		$.when(pjaxDfd, transitionDfd).then(bringNew, bringBack);
-	
-		function bringNew() {
 			if (doPjaxTransition) {
-				$pjaxWrapper.addClass('switch');
-		
+			
 				if($el.is('[rel=prev]')) {
-					$pjaxWrapper.css('left', '-100%');
+					$pjaxWrapper.addClass('goto-previous');
 				} else {
-					$pjaxWrapper.css('left', '100%');			
+					$pjaxWrapper.addClass('goto-next');			
 				}
-		
-				setTimeout(function() {
-					$pjaxWrapper.removeClass('switch goto-previous goto-next');
-					$pjaxWrapper.css('left', '');
-				}, 50);
+			
+				$pjaxWrapper.bind('webkitTransitionEnd', function() {
+					transitionDfd.resolve();
+				});
 			} else {
-				$pjaxWrapper.css('visibility','visible');
+				$pjaxWrapper.css('visibility','hidden');
+				transitionDfd.resolve();
 			}
-		}
+	
+			// finish loading content
+			$pjaxWrapper.bind('pjax:end', function() {
+				pjaxDfd.resolve();
+				app.trackEvent('pjax', 'loaded');
+			});
 		
-		// pjax error, load new URL as normal
-		function bringBack() {
-			window.location = $el.attr('href');
-			//$pjaxWrapper.removeClass('switch goto-previous goto-next');
-		}
-	});
+			// error loading
+			$pjaxWrapper.bind('pjax:error', function() {
+				pjaxDfd.reject();
+				app.trackEvent('pjax', 'error');
+			});
+	
+			$.when(pjaxDfd, transitionDfd).then(bringNew, bringBack);
+	
+			function bringNew() {
+				cleanUp();
+				
+				$('pre').addClass('prettyprint');
+				prettyPrint();
+				
+				if (doPjaxTransition) {
+					$pjaxWrapper.addClass('switch');
+		
+					if($el.is('[rel=prev]')) {
+						$pjaxWrapper.css('left', '-100%');
+					} else {
+						$pjaxWrapper.css('left', '100%');			
+					}
+		
+					setTimeout(function() {
+						$pjaxWrapper.removeClass('switch goto-previous goto-next');
+						$pjaxWrapper.css('left', '');
+					}, 50);
+				} else {
+					$pjaxWrapper.css('visibility','visible');
+				}
+			}
+		
+			// pjax error, load new URL as normal
+			function bringBack() {
+				cleanUp();
+				window.location = $el.attr('href');
+				//$pjaxWrapper.removeClass('switch goto-previous goto-next');
+			}
+			
+			function cleanUp() {
+				$pjaxWrapper.unbind('pjax:error pjax:end');
+			}
+			
+		});
+	}
 	
 	/* Code highlighting */
 	$('pre').addClass('prettyprint');
 	$.cachedScript('/js/prettify.js', 
 		{success: function() {
 			prettyPrint();
-			
-			$pjaxWrapper.bind('pjax:end', function() {
-				$('pre').addClass('prettyprint');
-				prettyPrint();
-			});
 		}
 	});
 	
