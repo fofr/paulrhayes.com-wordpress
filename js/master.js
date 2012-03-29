@@ -181,17 +181,19 @@ jQuery.cachedScript = function(url, options) {
 		var $previousAndNext = $('.single a[rel=prev], .single a[rel=next]'),
 			doPjaxTransition = 'onwebkittransitionend' in window; /* only webkit for now */
 	
-		$previousAndNext.pjax('.pjax-wrapper', {
+		/*$previousAndNext.pjax('.pjax-wrapper', {
 			timeout: 5000,
 			error: function() {
 				$pjaxWrapper.trigger('pjax:error');
 			}
-		});
+		});*/
 	
 		$pjaxWrapper.on('click', '.single a[rel=prev], .single a[rel=next]', function(evt) {
 			var $el = $(this),
 				transitionDfd = $.Deferred(),
 				pjaxDfd = $.Deferred();
+				
+			evt.preventDefault();
 
 			// finish transitioning, only webkit for now
 			// Firefox didn't transition 'left'
@@ -212,6 +214,17 @@ jQuery.cachedScript = function(url, options) {
 				$pjaxWrapper.css('visibility','hidden');
 				transitionDfd.resolve();
 			}
+			
+			$.when(transitionDfd).then(function() {
+				$.pjax({
+				  url: $el.attr('href'),
+				  container: $pjaxWrapper,
+					timeout: 5000,
+					error: function() {
+						$pjaxWrapper.trigger('pjax:error');
+					}
+				})
+			});
 	
 			// finish loading content
 			$pjaxWrapper.bind('pjax:end', function() {
@@ -235,17 +248,9 @@ jQuery.cachedScript = function(url, options) {
 				
 				if (doPjaxTransition) {
 					$pjaxWrapper.addClass('switch');
-		
-					if($el.is('[rel=prev]')) {
-						$pjaxWrapper.css('left', '-100%');
-					} else {
-						$pjaxWrapper.css('left', '100%');			
-					}
-		
 					setTimeout(function() {
 						$pjaxWrapper.removeClass('switch goto-previous goto-next');
-						$pjaxWrapper.css('left', '');
-					}, 50);
+					}, 100);
 				} else {
 					$pjaxWrapper.css('visibility','visible');
 				}

@@ -160,7 +160,7 @@ small, .small {
 font-size: smaller;
 }
 
-input.submit, button, a, label {
+.submit, button, a, label {
 cursor: pointer;
 }
 
@@ -301,7 +301,7 @@ color: #333;
 /* Forms */
 /*************************************************/
 
-input.submit {
+.submit {
 font-size: 14px;
 display: block;
 background: #ccc;
@@ -317,8 +317,8 @@ text-shadow: 0 1px 0 #fff;
 border: 1px solid #aaa;
 }
 
-input.submit:hover,
-input.submit:focus {
+.submit:hover,
+.submit:focus {
 background: #ccc;
 background: -moz-linear-gradient(#fff, #ccc);
 background: -webkit-linear-gradient(#fff, #ccc);
@@ -326,7 +326,7 @@ background: -o-linear-gradient(#fff, #ccc);
 background: linear-gradient(#fff, #ddd);
 }
 
-input.submit:active {
+.submit:active {
 background: #bbb;
 background: -moz-linear-gradient(#bbb, #ddd);
 background: -webkit-linear-gradient(#bbb, #ddd);
@@ -716,15 +716,27 @@ overflow: visible;
 When switching articles, article moves off to left or right.
 When loading has finished, the article is switched without a
 transition to the opposite side, and moves back into view.
- */
+*/
 
 .pjax-wrapper {
 position: relative;
--webkit-transition: left 400ms linear;
-/*-moz-transition: left 400ms linear;
--o-transition: left 400ms linear;
--ms-transition: left 400ms linear;
-transition: left 400ms linear;*/
+-webkit-transition: -webkit-transform 400ms linear;
+/*-moz-transition: -moz-transform 400ms linear;
+-o-transition: -o-transform 400ms linear;
+-ms-transition: -ms-transform 400ms linear;
+transition: transform 400ms linear;*/
+}
+
+@media all and (-webkit-min-device-pixel-ratio: 2) {
+	/* 
+	Set initial 3D state to prevent a white flash on animation,
+	however, on Chrome and desktop Safari this triggers antialiased font
+	rendering instead of sub-pixel, so it looks shit. On high dpi screens
+	it looks great. So only apply the white flash fix on these devices.
+	*/
+	.pjax-wrapper {
+	-webkit-transform: translate3d(0,0,0);
+	}
 }
 
 /* No transitions when making the switch */
@@ -767,13 +779,15 @@ transition: none;*/
 }
 
 /* Going to next post, send current article left */
+.pjax-wrapper.switch.goto-previous,
 .pjax-wrapper.goto-next {
-left: -100%;
+-webkit-transform: translate3d(-100%,0,0);
 }
 
 /* Going to previous post, send current article right */
+.pjax-wrapper.switch.goto-next,
 .pjax-wrapper.goto-previous {
-left: 100%;
+-webkit-transform: translate3d(100%,0,0);
 }
 
 .single article {
