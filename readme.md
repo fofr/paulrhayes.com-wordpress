@@ -5,10 +5,9 @@ http://www.paulrhayes.com/
 - CSS
 - JS
 - Wordpress PHP theme files
-- Theme images
 
 ## Doesn't include
-- Experiments (yet)
+- Experiments (see https://github.com/fofr/paulrhayes.com-experiments)
 
 ## Wordpress plugins
 - Akismet (http://akismet.com/)
