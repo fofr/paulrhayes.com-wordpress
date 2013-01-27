@@ -711,84 +711,6 @@ overflow: visible;
 /* Single post: body.single */
 /*************************************************/
 
-/* 
-When switching articles, article moves off to left or right.
-When loading has finished, the article is switched without a
-transition to the opposite side, and moves back into view.
-*/
-
-.pjax-wrapper {
-position: relative;
--webkit-transition: -webkit-transform 400ms linear;
-/*-moz-transition: -moz-transform 400ms linear;
--o-transition: -o-transform 400ms linear;
--ms-transition: -ms-transform 400ms linear;
-transition: transform 400ms linear;*/
-}
-
-@media all and (-webkit-min-device-pixel-ratio: 2) {
-	/* 
-	Set initial 3D state to prevent a white flash on animation,
-	however, on Chrome and desktop Safari this triggers antialiased font
-	rendering instead of sub-pixel, so it looks shit. On high dpi screens
-	it looks great. So only apply the white flash fix on these devices.
-	*/
-	.pjax-wrapper {
-	-webkit-transform: translate3d(0,0,0);
-	}
-}
-
-/* No transitions when making the switch */
-.pjax-wrapper.switch {
--webkit-transition: none;
-/*-moz-transition: none;
--o-transition: none;
--ms-transition: none;
-transition: none;*/
-}
-
-@media all and (max-width: 779px) {
-	.pjax-wrapper {
-		-webkit-transition-duration: 300ms;
-		/*-moz-transition-duration: 300ms;
-		-o-transition-duration: 300ms;
-		-ms-transition-duration: 300ms;
-		transition-duration: 300ms;*/
-	}
-}
-
-@media all and (max-width: 650px) {
-	.pjax-wrapper {
-		-webkit-transition-duration: 250ms;
-		/*-moz-transition-duration: 250ms;
-		-o-transition-duration: 250ms;
-		-ms-transition-duration: 250ms;
-		transition-duration: 250ms;*/
-	}
-}
-
-@media all and (max-width: 499px) {
-	.pjax-wrapper {
-		-webkit-transition-duration: 200ms;
-		/*-moz-transition-duration: 200ms;
-		-o-transition-duration: 200ms;
-		-ms-transition-duration: 200ms;
-		transition-duration: 200ms;*/
-	}
-}
-
-/* Going to next post, send current article left */
-.pjax-wrapper.switch.goto-previous,
-.pjax-wrapper.goto-next {
--webkit-transform: translate3d(-100%,0,0);
-}
-
-/* Going to previous post, send current article right */
-.pjax-wrapper.switch.goto-next,
-.pjax-wrapper.goto-previous {
--webkit-transform: translate3d(100%,0,0);
-}
-
 .single article {
 width: 780px;
 margin: 0 auto;
@@ -1502,11 +1424,13 @@ color: #fff;
 
 
 /* Failed tests */
-.no-csstransforms3d .test-3dtransforms {
+.no-csstransforms3d .test-3dtransforms,
+.no-getusermedia .test-getusermedia {
 display: none;
 }
 
 /* Fallbacks */
-.no-csstransforms3d .test-3dtransforms-fallback {
+.no-csstransforms3d .test-3dtransforms-fallback,
+.no-getusermedia .test-getusermedia-fallback {
 display: block;
 }

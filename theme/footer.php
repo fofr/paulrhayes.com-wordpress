@@ -4,10 +4,9 @@
 		</div>
 	</footer>
 </div>
-<script src="/js/jquery.pjax.min.js"></script>
-<script src="/js/master.js?5"></script>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
 <script>!window.jQuery && document.write('<script src="js/jquery-1.9.0.min.js"><\/script>')</script>
+<script src="/js/master.js?6"></script>
 <script>var _gaq=[['_setAccount','UA-59763-15'],['_trackPageview']];(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];g.async=1;g.src='//www.google-analytics.com/ga.js';s.parentNode.insertBefore(g,s)}(document,'script'))</script>
 <?php wp_footer(); ?>
 </body>

@@ -118,6 +118,7 @@ var app = {
 				}
 		};
 	})(this),
+	
 	supportPlaceholder: function() {
 	  var i = document.createElement('input');
 	  return 'placeholder' in i;
@@ -132,6 +133,7 @@ var app = {
 		
 		return this;
 	},
+	
 	trackEvent: function(action, label) {
 		if(!!(_gaq && _gaq.push)) {
 			var category = window.location.pathname;
@@ -144,136 +146,30 @@ var app = {
 
 // just to make things a little more readable
 jQuery.fn.isPresent = function() {
-  return this.length > 0;
+	return this.length > 0;
 };
 
 // from http://api.jquery.com/jQuery.getScript/
 jQuery.cachedScript = function(url, options) {
 
-  // allow user to set any option except for dataType, cache, and url
-  options = $.extend(options || {}, {
-    dataType: "script",
-    cache: true,
-    url: url
-  });
+	// allow user to set any option except for dataType, cache, and url
+	options = $.extend(options || {}, {
+		dataType: "script",
+		cache: true,
+		url: url
+	});
 
-  // Use $.ajax() since it is more flexible than $.getScript
-  // Return the jqXHR object so we can chain callbacks
-  return jQuery.ajax(options);
+	// Use $.ajax() since it is more flexible than $.getScript
+	// Return the jqXHR object so we can chain callbacks
+	return jQuery.ajax(options);
 };
 
 (function(){
 	
-	$(window).bind('popstate', function(evt) {
-		var originalEvent = evt.originalEvent;
-		if(originalEvent && originalEvent.state && originalEvent.state.pjax) {
-			app.trackPageview().trackEvent('pjax', 'pop');
-			
-			$('pre').addClass('prettyprint');
-			prettyPrint();
-		}
-	});
-	
-	/* pjax inline loading */
-	var $pjaxWrapper = $('.pjax-wrapper');
-	if($pjaxWrapper.isPresent()) {
-		
-		var $previousAndNext = $('.single a[rel=prev], .single a[rel=next]'),
-			doPjaxTransition = 'onwebkittransitionend' in window; /* only webkit for now */
-	
-		/*$previousAndNext.pjax('.pjax-wrapper', {
-			timeout: 5000,
-			error: function() {
-				$pjaxWrapper.trigger('pjax:error');
-			}
-		});*/
-	
-		$pjaxWrapper.on('click', '.single a[rel=prev], .single a[rel=next]', function(evt) {
-			var $el = $(this),
-				transitionDfd = $.Deferred(),
-				pjaxDfd = $.Deferred();
-				
-			evt.preventDefault();
-
-			// finish transitioning, only webkit for now
-			// Firefox didn't transition 'left'
-			// Opera transitioned, but didn't bring next/previous article in from opposite side
-		
-			if (doPjaxTransition) {
-			
-				if($el.is('[rel=prev]')) {
-					$pjaxWrapper.addClass('goto-previous');
-				} else {
-					$pjaxWrapper.addClass('goto-next');			
-				}
-			
-				$pjaxWrapper.bind('webkitTransitionEnd', function() {
-					transitionDfd.resolve();
-				});
-			} else {
-				$pjaxWrapper.css('visibility','hidden');
-				transitionDfd.resolve();
-			}
-			
-			$.when(transitionDfd).then(function() {
-				$.pjax({
-				  url: $el.attr('href'),
-				  container: $pjaxWrapper,
-					timeout: 5000,
-					error: function() {
-						$pjaxWrapper.trigger('pjax:error');
-					}
-				})
-			});
-	
-			// finish loading content
-			$pjaxWrapper.bind('pjax:end', function() {
-				pjaxDfd.resolve();
-				app.trackEvent('pjax', 'loaded');
-			});
-		
-			// error loading
-			$pjaxWrapper.bind('pjax:error', function() {
-				pjaxDfd.reject();
-				app.trackEvent('pjax', 'error');
-			});
-	
-			$.when(pjaxDfd, transitionDfd).then(bringNew, bringBack);
-	
-			function bringNew() {
-				cleanUp();
-				
-				$('pre').addClass('prettyprint');
-				prettyPrint();
-				
-				if (doPjaxTransition) {
-					$pjaxWrapper.addClass('switch');
-					setTimeout(function() {
-						$pjaxWrapper.removeClass('switch goto-previous goto-next');
-					}, 100);
-				} else {
-					$pjaxWrapper.css('visibility','visible');
-				}
-			}
-		
-			// pjax error, load new URL as normal
-			function bringBack() {
-				cleanUp();
-				window.location = $el.attr('href');
-				//$pjaxWrapper.removeClass('switch goto-previous goto-next');
-			}
-			
-			function cleanUp() {
-				$pjaxWrapper.unbind('pjax:error pjax:end');
-			}
-			
-		});
-	}
-	
 	/* Code highlighting */
 	$('pre').addClass('prettyprint');
-	$.cachedScript('/js/prettify.js', 
-		{success: function() {
+	$.cachedScript('/js/prettify.js', {
+		success: function() {
 			prettyPrint();
 		}
 	});
