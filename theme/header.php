@@ -6,7 +6,7 @@
 	<meta charset="<?php bloginfo('charset') ?>" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 	<title><?php wp_title('-', true, 'right'); echo esc_html(bloginfo('name')); ?></title>
-	<meta name="description" content="A design and code blog from UX developer Paul Hayes, specializing in CSS3, HTML5 and JavaScript." />	
+	<meta name="description" content="A design and code blog from Paul Hayes, specializing in CSS3, HTML5 and JavaScript." />
 	<meta name="google-site-verification" content="KXou1BjZqpDc9x8CuCA6epEKcxttO_EGrdhHSkqgEOI" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<script>(function(d){d.className=d.className.replace(/^no-js\b/,'js');}(document.documentElement));</script>
@@ -14,6 +14,7 @@
 	<link rel="stylesheet" href="/css/master.css?12" />
 	<?php wp_head(); ?>
 	<link rel="profile" href="http://gmpg.org/xfn/11" />
+	<link rel="author" href="https://plus.google.com/101305158833886436755?rel=author" />
 	<link rel="alternate" type="application/rss+xml" href="http://feeds.feedburner.com/prhayes" title="Paul Hayes RSS" />
 	<link rel="pingback" href="<?php bloginfo('pingback_url') ?>" />
 	<link rel="icon" type="image/png" href="/favicon.png" />
