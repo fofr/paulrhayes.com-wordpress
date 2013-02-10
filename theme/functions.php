@@ -6,7 +6,7 @@ function commenter_link() {
     $avatar_email = get_comment_author_email();
     $avatar_size = apply_filters( 'avatar_size', '60' ); // Available filter: avatar_size
     $avatar = str_replace( "class='avatar", "class='photo avatar", get_avatar( $avatar_email, $avatar_size ) );
-    echo $avatar . ' <span class="fn n">' . get_comment_author() . '</span>';
+    echo '<div class="media-pull-left">' . $avatar . '</div><div class="media-body"><span class="fn n">' . get_comment_author() . '</span></div>';
 }
 
 ?>
