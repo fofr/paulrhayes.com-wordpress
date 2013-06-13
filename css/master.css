@@ -440,16 +440,19 @@ a.site-title:active {
     line-height: 1.25; /* 80/64px */
     margin: 1.375em auto 0.84375em; /* 88/64px,  88/54px */
     text-align: center;
-    -webkit-font-feature-settings: "calt", "liga", "dlig";
-    -moz-font-feature-settings: "liga=1, dlig=1";
-    -ms-font-feature-settings: "liga", "dlig";
-    -o-font-feature-settings: "liga", "dlig";
-    font-feature-settings: "liga", "dlig";
+    -webkit-font-feature-settings: "calt", "liga";
+    -moz-font-feature-settings: "liga=1";
+    -ms-font-feature-settings: "liga";
+    -o-font-feature-settings: "liga";
+    font-feature-settings: "liga";
+    font-weight: bold;
+    padding: 0 40px;
 }
 
 @media all and (max-width: 620px) {
     .main-content-title {
         font-size: 2em;
+        padding: 0;
     }
 }
 
@@ -488,14 +491,16 @@ a.site-title:active {
     color: #333;
     font-size: 2em; /* 48/24px */
     line-height: 1.333333333em;
-    margin: 0 auto 16px; /* Not sure why 53px puts this in correct rhythm, should be 48px */
+    margin: 0 auto 16px;
     text-align: center;
-    -webkit-font-feature-settings: "calt", "liga", "dlig";
-    -moz-font-feature-settings: "liga=1, dlig=1";
-    -ms-font-feature-settings: "liga", "dlig";
-    -o-font-feature-settings: "liga", "dlig";
-    font-feature-settings: "liga", "dlig";
+    -webkit-font-feature-settings: "calt", "liga";
+    -moz-font-feature-settings: "liga=1";
+    -ms-font-feature-settings: "liga";
+    -o-font-feature-settings: "liga";
+    font-feature-settings: "liga";
     text-decoration: none;
+    font-weight: bold;
+    padding: 0 40px;
 }
 
 .listing-item-title a:hover {
@@ -564,6 +569,10 @@ a.site-title:active {
 
     .listing {
         margin: auto 20px;
+    }
+
+    .listing-item-title {
+        padding: 0;
     }
 
 }
