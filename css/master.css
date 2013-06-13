@@ -632,9 +632,10 @@ a.site-title:active {
 
 .article h2,
 .article h3 {
-    margin: 1.84615384615385em 0 0.61538461538462em; /* 48/26px,  16/26px */
-    font-size: 1.08333333333333em; /* 26/24 */
-    line-height: 1.23076923076923em; /* 32/26 */
+    margin: 1.5em 0 0.5em; /* 48/32px,  16/32px */
+    font-size: 1.333333333em; /* 32/24 */
+    font-weight: bold;
+    line-height: 1.5em; /* 48/32 */
 }
 
 .article blockquote {
