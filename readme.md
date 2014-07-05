@@ -1,4 +1,7 @@
 # paulrhayes.com Wordpress theme
+
+Theme superceded by a statically generated site: https://github.com/fofr/paulrhayes.com
+
 http://www.paulrhayes.com/
 
 ## Includes
